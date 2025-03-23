@@ -1,6 +1,7 @@
 package br.com.ballon.infra.expense;
 
 import jakarta.persistence.*;
+
 import java.util.UUID;
 
 @Entity

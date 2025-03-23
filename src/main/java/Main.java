@@ -13,6 +13,7 @@ public class Main {
                 .withName("Admin User")
                 .withEmail("admin@example.com")
                 .withPassword("admin123")
+                .withIsDeleted(true)
                 .build();
 
         Consumer consumer = new Consumer.ConsumerBuilder()

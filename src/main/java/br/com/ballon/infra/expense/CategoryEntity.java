@@ -2,7 +2,6 @@ package br.com.ballon.infra.expense;
 
 import br.com.ballon.domain.expenses.CategoryEnum;
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "categories")

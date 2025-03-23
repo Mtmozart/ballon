@@ -1,7 +1,7 @@
 CREATE TYPE user_type AS ENUM ('ADMIN', 'CONSUMER');
 
 CREATE TABLE admins (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
@@ -11,24 +11,23 @@ CREATE TABLE admins (
 );
 
 CREATE TABLE consumers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     type_user user_type NOT NULL DEFAULT 'CONSUMER',
-    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-    updated_at TIMESTAMP WITH TIME ZONE,
-    deleted_at TIMESTAMP WITH TIME ZONE
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE
 );
 
 CREATE TABLE expenses (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY,
     month VARCHAR(20) NOT NULL CHECK (month IN ('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december')),
     year INT NOT NULL CHECK (year >= 2000 AND year <= 2100),
     title VARCHAR(50) NOT NULL,
     value DECIMAL(10,2) NOT NULL CHECK (value >= 0),
     consumer_id UUID NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
     FOREIGN KEY (consumer_id) REFERENCES consumers(id) ON DELETE CASCADE
 );

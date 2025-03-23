@@ -2,8 +2,8 @@ package br.com.ballon.infra.user;
 
 import br.com.ballon.domain.user.Profile;
 import jakarta.persistence.*;
+
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity(name = "Admin")
@@ -11,7 +11,6 @@ import java.util.UUID;
 public class AdminEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false, length = 100)
@@ -27,8 +26,17 @@ public class AdminEntity {
     @Column(nullable = false)
     private Profile typeUser = Profile.ADMIN;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
     private Instant createdAt = Instant.now();
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = Instant.now();
+        }
+    }
 
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private Instant updatedAt;
@@ -37,6 +45,18 @@ public class AdminEntity {
     private Instant deletedAt;
 
     public AdminEntity() {
+    }
+
+    public AdminEntity(UUID id, String fullName, String email, String password, Profile typeUser, boolean isDeleted, Instant createdAt, Instant updatedAt, Instant deletedAt) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.typeUser = typeUser;
+        this.isDeleted = isDeleted;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
     }
 
     // Getters
@@ -60,11 +80,19 @@ public class AdminEntity {
         return typeUser;
     }
 
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
     public Instant getCreatedAt() {
         return createdAt;
     }
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Instant getDeletedAt() {
+        return deletedAt;
     }
 }

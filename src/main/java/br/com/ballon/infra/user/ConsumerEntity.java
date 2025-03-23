@@ -1,13 +1,10 @@
 package br.com.ballon.infra.user;
 
-import br.com.ballon.domain.expenses.Months;
 import br.com.ballon.domain.user.Profile;
 import br.com.ballon.infra.expense.ExpenseEntity;
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -17,7 +14,6 @@ import java.util.UUID;
 public class ConsumerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false, length = 100)
@@ -34,15 +30,21 @@ public class ConsumerEntity {
     private Profile typeUser = Profile.CONSUMER;
 
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
-    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @PrePersist
+    public void prePersist() {
+        if (this.createdAt == null) {
+            this.createdAt = Instant.now();
+        }
+    }
+
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "update_at")
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "consumer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ExpenseEntity> expenses = new HashSet<>();  // Relacionamento com Expense
+    private Set<ExpenseEntity> expenses = new HashSet<>();
 
-    // Construtores
     public ConsumerEntity() {
     }
 
@@ -87,5 +89,18 @@ public class ConsumerEntity {
 
     public Set<ExpenseEntity> getExpenses() {
         return expenses;
+    }
+
+    @Override
+    public String toString() {
+        return "ConsumerEntity{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", typeUser=" + typeUser +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

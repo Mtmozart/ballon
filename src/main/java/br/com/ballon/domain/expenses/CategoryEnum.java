@@ -1,7 +1,5 @@
 package br.com.ballon.domain.expenses;
 
-import br.com.ballon.domain.user.Profile;
-
 public enum CategoryEnum {
     ESSENTIALS("essentials"),
     LEISURES("leisures"),
