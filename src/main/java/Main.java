@@ -4,6 +4,7 @@ import br.com.ballon.domain.user.Consumer;
 import br.com.ballon.domain.user.Profile;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.time.Year;
 
 public class Main {
@@ -30,7 +31,7 @@ public class Main {
                 .name("sub")
                 .build();
         Expense expense = new Expense.Builder()
-                .withMonth(Months.JANUARY)
+                .withMonth(Month.JANUARY)
                 .withYear(Year.of(2023))
                 .withTitle("Aluguel")
                 .withValue(new BigDecimal("1500.00"))
@@ -38,7 +39,7 @@ public class Main {
                 .withConsumer(consumer)
                 .build();
         Expense expense2 = new Expense.Builder()
-                .withMonth(Months.JANUARY)
+                .withMonth(Month.JANUARY)
                 .withYear(Year.of(2023))
                 .withTitle("Aluguel")
                 .withValue(new BigDecimal("1500.00"))
@@ -47,7 +48,7 @@ public class Main {
                 .build();
 
         Expense expense3 = new Expense.Builder()
-                .withMonth(Months.JANUARY)
+                .withMonth(Month.JANUARY)
                 .withYear(Year.of(2023))
                 .withTitle("Aluguel")
                 .withValue(new BigDecimal("1500.00"))

@@ -1,7 +1,5 @@
 package br.com.ballon.infra.expense;
 
-import br.com.ballon.domain.expenses.Category;
-import br.com.ballon.domain.expenses.CategoryEnum;
 import br.com.ballon.infra.user.ConsumerEntity;
 import jakarta.persistence.*;
 
@@ -9,7 +7,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Month;
 import java.time.Year;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "Expense")
@@ -17,7 +14,6 @@ import java.util.UUID;
 public class ExpenseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
     @Enumerated(EnumType.STRING)

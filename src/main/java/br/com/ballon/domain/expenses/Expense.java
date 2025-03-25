@@ -4,13 +4,14 @@ import br.com.ballon.domain.exception.BallonException;
 import br.com.ballon.domain.user.Consumer;
 
 import java.math.BigDecimal;
+import java.time.Month;
 import java.time.Year;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Expense {
     private UUID id;
-    private Months month;
+    private Month month;
     private Year year;
     private String title;
     private BigDecimal value;
@@ -21,7 +22,7 @@ public class Expense {
     public Expense() {
     }
 
-    public Expense(UUID id, Months month, Year year, String title, BigDecimal value, Category category, SubCategory subCategory) {
+    public Expense(UUID id, Month month, Year year, String title, BigDecimal value, Category category, SubCategory subCategory) {
         this.id = id;
         this.month = month;
         this.year = year;
@@ -38,7 +39,7 @@ public class Expense {
         return id;
     }
 
-    public Months getMonth() {
+    public Month getMonth() {
         return month;
     }
 
@@ -75,7 +76,7 @@ public class Expense {
             expense = new Expense();
         }
 
-        public Builder withMonth(Months month) {
+        public Builder withMonth(Month month) {
             expense.month = month;
             return this;
         }
@@ -135,7 +136,7 @@ public class Expense {
         this.id = UUID.randomUUID();
     }
 
-    public void update(Months month, Year year, String title, BigDecimal value, Category category) {
+    public void update(Month month, Year year, String title, BigDecimal value, Category category) {
         if (month == null || year == null || title == null || value == null || category == null || consumer == null) {
             throw new BallonException("Parâmetros inválidos.");
         }

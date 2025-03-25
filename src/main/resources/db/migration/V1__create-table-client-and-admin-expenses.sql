@@ -22,7 +22,7 @@ CREATE TABLE consumers (
 
 CREATE TABLE expenses (
     id UUID PRIMARY KEY,
-    month VARCHAR(20) NOT NULL CHECK (month IN ('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december')),
+    month VARCHAR(20) NOT NULL CHECK (month IN ('JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER')),
     year INT NOT NULL CHECK (year >= 2000 AND year <= 2100),
     title VARCHAR(50) NOT NULL,
     value DECIMAL(10,2) NOT NULL CHECK (value >= 0),
@@ -34,7 +34,7 @@ CREATE TABLE expenses (
 
 CREATE TABLE categories (
     id BIGINT PRIMARY KEY NOT NULL,
-    title VARCHAR(50) NOT NULL UNIQUE CHECK (title IN ('essentials', 'leisures', 'discretionary', 'investments'))
+    title VARCHAR(50) NOT NULL UNIQUE CHECK (title IN ('ESSENTIALS', 'LEISURES', 'DISCRETIONARY', 'INVESTMENTS'))
 );
 
 CREATE TABLE expense_categories (
@@ -54,9 +54,10 @@ CREATE TABLE subcategories (
     FOREIGN KEY (consumer_id) REFERENCES consumers(id) ON DELETE CASCADE
 );
 
+
 INSERT INTO categories (id, title)
 VALUES
-    (1, 'essentials'),
-    (2, 'leisures'),
-    (3, 'discretionary'),
-    (4, 'investments');
+    (1, 'ESSENTIALS'),
+    (2, 'LEISURES'),
+    (3, 'DISCRETIONARY'),
+    (4, 'INVESTMENTS');
