@@ -2,11 +2,11 @@ package br.com.ballon.application.expenses;
 
 import java.util.List;
 
-public interface IExpense<T, ID, S, R, L> {
+public interface IExpense<T, ID, S, R, L, B> {
 
-    R create(T t, ID UserId, L categoryID);
+    R create(T t, ID UserId, L categoryId);
 
-    R update(ID id, S s);
+    B update(ID id, T t, L categoryId);
 
     void delete(ID id);
 
