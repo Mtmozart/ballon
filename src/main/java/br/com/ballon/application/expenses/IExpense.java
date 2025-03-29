@@ -13,4 +13,7 @@ public interface IExpense<T, ID, S, R, L, B> {
     R findById(ID id);
 
     List<R> findAllByUser(ID UserId);
+
+    List<R> createRecurringExpenses(T t, ID UserId, L categoryId, S repeat);
+
 }

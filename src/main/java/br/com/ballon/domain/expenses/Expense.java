@@ -164,6 +164,23 @@ public class Expense {
                 '}';
     }
 
+
+    public void updateMonthAndIdForRecurrentExpense(Month month) {
+        if(month == null){
+            throw new BallonException("O mês não pode ser nulo.");
+        }
+        this.geraIdentificadorUnico();
+        this.month = month;
+    }
+
+    public void updateYearAndIdForRecurrentExpense(Year year) {
+        if(month == null){
+            throw new BallonException("O mês não pode ser nulo.");
+        }
+        this.year = year;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

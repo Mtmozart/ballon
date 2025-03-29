@@ -2,22 +2,21 @@ package br.com.ballon.application.expenses;
 
 import br.com.ballon.domain.exception.BallonException;
 import br.com.ballon.domain.expenses.Expense;
-import br.com.ballon.infra.expense.CategoryEntity;
-import br.com.ballon.infra.expense.CategoryEntityRepository;
-import br.com.ballon.infra.expense.ExpenseEntityRepository;
-import br.com.ballon.infra.expense.SubCategoryEntityRepository;
+import br.com.ballon.infra.expense.*;
 import br.com.ballon.infra.user.ConsumerEntity;
 import br.com.ballon.infra.user.ConsumerEntityRepository;
 import br.com.ballon.utils.ExpenseMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpenseService implements IExpense<Expense, UUID, GetDataExpense, DataExpense, Long, Boolean> {
+public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Long, Boolean> {
 
     public final ExpenseEntityRepository entityRepository;
     private final ConsumerEntityRepository consumerEntityRepository;
@@ -70,10 +69,29 @@ public class ExpenseService implements IExpense<Expense, UUID, GetDataExpense, D
 
     @Override
     public List<DataExpense> findAllByUser(UUID userId) {
-        return this.entityRepository.getAllByUser(userId).orElseThrow(() -> new BallonException("Gasto não encontrado."))
+        return this.entityRepository.getAllByUser(userId).orElseThrow(() -> new BallonException("Gastos não encontrado."))
                 .stream().map(
                         ExpenseMapper::toDataResponse
                 ).collect(Collectors.toUnmodifiableList());
+    }
 
+    @Override
+    public List<DataExpense> createRecurringExpenses(Expense expense, UUID userId, Long categoryId, Long repeat) {
+        List<ExpenseEntity> expensesEntityList = new ArrayList<ExpenseEntity>();
+        ConsumerEntity consumerEntity = this.consumerEntityRepository.findById(userId).orElseThrow(() -> new BallonException("Usuário não encontrado."));
+        CategoryEntity category = this.categoryEntityRepository.findById(categoryId).orElseThrow(() -> new BallonException("Categoria não encontrada."));
+        Month currentMonth = expense.getMonth();
+        for (int i = 0; i < repeat; i++) {
+            Month nextMonth = currentMonth.plus(i);
+            expense.updateMonthAndIdForRecurrentExpense(nextMonth);
+            if (nextMonth.equals(currentMonth) && i > 0) {
+                expense.updateYearAndIdForRecurrentExpense(expense.getYear().plusYears(1));
+            }
+            ExpenseEntity expenseEntity = ExpenseMapper.toExpenseEntityByExepenseConsumerCategory(expense, consumerEntity, category);
+            expensesEntityList.add(expenseEntity);
+        }
+        return this.entityRepository.saveAll(expensesEntityList).stream().map(
+                ExpenseMapper::toDataResponse
+        ).collect(Collectors.toUnmodifiableList());
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/expense")
+@RequestMapping("/expenses")
 public class ExpensesController {
 
     private final ExpenseService service;
@@ -46,8 +46,14 @@ public class ExpensesController {
         return ResponseEntity.ok(this.service.findById(id));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<List<DataExpense>> findAll(@PathVariable UUID id) {
         return ResponseEntity.ok().body(this.service.findAllByUser(id));
+    }
+
+    @PostMapping("/recurring")
+    @Transactional
+    public ResponseEntity<List<DataExpense>> createRecurringExpenses(@Valid @RequestBody GetDataRecurringExpenses data) {
+        return ResponseEntity.ok().body(this.service.createRecurringExpenses(ExpenseMapper.toDomainByRegisterRecurringDto(data), data.consumerId(), data.categoriaId(), data.recurring()));
     }
 }
