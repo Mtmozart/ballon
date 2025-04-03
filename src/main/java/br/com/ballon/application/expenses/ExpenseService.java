@@ -8,15 +8,17 @@ import br.com.ballon.infra.user.ConsumerEntityRepository;
 import br.com.ballon.utils.ExpenseMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Long, Boolean> {
+public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults> {
 
     public final ExpenseEntityRepository entityRepository;
     private final ConsumerEntityRepository consumerEntityRepository;
@@ -93,5 +95,35 @@ public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense
         return this.entityRepository.saveAll(expensesEntityList).stream().map(
                 ExpenseMapper::toDataResponse
         ).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public StaticsResults getStaticsByMonth(UUID consumerId, Month month) {
+
+        return new StaticsResults(this.entityRepository.getExpensesByMonth(month, consumerId)
+                .orElseThrow(() -> new BallonException("Erro ao buscar as estatísticas"))
+                .stream().map(ExpenseEntity::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
+    }
+
+    @Override
+    public StaticsResults getStaticsByCategory(UUID consumerId, Long categoryId) {
+        return new StaticsResults(this.entityRepository.getExpensesByCategoryId(categoryId, consumerId)
+                .orElseThrow(() -> new BallonException("Erro ao buscar as estatísticas"))
+                .stream().map(
+                        ExpenseEntity::getValue
+                ).reduce(BigDecimal.ZERO, BigDecimal::add));
+    }
+
+    @Override
+    public StaticsResults getStaticsByYear(UUID consumerId, Year year) {
+
+        return new StaticsResults(this.entityRepository.getExpensesByYear(year, consumerId)
+                .orElseThrow(() -> new BallonException("Erro ao buscar as estatísticas"))
+                .stream()
+                .map(ExpenseEntity::getValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+
     }
 }

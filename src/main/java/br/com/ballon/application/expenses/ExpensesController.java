@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
+import java.time.Year;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,5 +57,19 @@ public class ExpensesController {
     @Transactional
     public ResponseEntity<List<DataExpense>> createRecurringExpenses(@Valid @RequestBody GetDataRecurringExpenses data) {
         return ResponseEntity.ok().body(this.service.createRecurringExpenses(ExpenseMapper.toDomainByRegisterRecurringDto(data), data.consumerId(), data.categoriaId(), data.recurring()));
+    }
+    @GetMapping("/users/{userId}/category/{categoryId}")
+    public ResponseEntity<StaticsResults> staticsByCategory(@PathVariable UUID userId, @PathVariable Long categoryId) {
+        return ResponseEntity.ok().body(this.service.getStaticsByCategory(userId, categoryId));
+    }
+
+    @GetMapping("/users/{userId}/month/{month}")
+    public ResponseEntity<StaticsResults> staticsByMonth(@PathVariable UUID userId, @PathVariable Month month) {
+        return ResponseEntity.ok().body(this.service.getStaticsByMonth(userId, month));
+    }
+
+    @GetMapping("/users/{userId}/year/{year}")
+    public ResponseEntity<StaticsResults> staticsByYear(@PathVariable UUID userId, @PathVariable Year year) {
+        return ResponseEntity.ok().body(this.service.getStaticsByYear(userId, year));
     }
 }

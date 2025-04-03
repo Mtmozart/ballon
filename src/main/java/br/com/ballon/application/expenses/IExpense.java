@@ -2,11 +2,11 @@ package br.com.ballon.application.expenses;
 
 import java.util.List;
 
-public interface IExpense<T, ID, S, R, L, B> {
+public interface IExpense<T, ID, S, R, B, M, Y, D> {
 
-    R create(T t, ID UserId, L categoryId);
+    R create(T t, ID UserId, S categoryId);
 
-    B update(ID id, T t, L categoryId);
+    B update(ID id, T t, S categoryId);
 
     void delete(ID id);
 
@@ -14,6 +14,13 @@ public interface IExpense<T, ID, S, R, L, B> {
 
     List<R> findAllByUser(ID UserId);
 
-    List<R> createRecurringExpenses(T t, ID UserId, L categoryId, S repeat);
+    List<R> createRecurringExpenses(T t, ID UserId, S categoryId, S repeat);
+
+    D getStaticsByMonth(ID UserId, M month);
+
+    D getStaticsByCategory(ID UserId, S categoryId);
+
+    D getStaticsByYear(ID UserId, Y year);
+
 
 }

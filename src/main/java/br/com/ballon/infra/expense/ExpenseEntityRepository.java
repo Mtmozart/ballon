@@ -18,8 +18,16 @@ public interface ExpenseEntityRepository extends JpaRepository<ExpenseEntity, UU
     @Query("UPDATE Expense e SET e.month = :month, e.year = :year, e.title = :title, e.value = :value, e.category.id = :categoryId, e.updatedAt = :updatedAt WHERE e.id = :id")
     Optional<Integer> updateExpense(Month month, Year year, String title, BigDecimal value, Long categoryId, Instant updatedAt, UUID id);
 
-    @Modifying(clearAutomatically = true)
     @Query("SELECT e FROM Expense e WHERE e.consumer.id = :userId")
     Optional<List<ExpenseEntity>> getAllByUser(UUID userId);
+
+    @Query("SELECT e FROM Expense e WHERE e.category.id = :categoryId AND e.consumer.id = :consumerId")
+    Optional<List<ExpenseEntity>> getExpensesByCategoryId(Long categoryId, UUID consumerId);
+
+    @Query("SELECT e FROM Expense e WHERE e.month = :month AND e.consumer.id = :consumerId")
+    Optional<List<ExpenseEntity>> getExpensesByMonth(Month month, UUID consumerId);
+
+    @Query("SELECT e FROM Expense e WHERE e.year = :year AND e.consumer.id = :consumerId")
+    Optional<List<ExpenseEntity>> getExpensesByYear(Year year, UUID consumerId);
 
 }
