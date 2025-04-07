@@ -2,13 +2,15 @@ package br.com.ballon.infra.user;
 
 import br.com.ballon.domain.user.Profile;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.util.*;
 
 @Entity(name = "Admin")
 @Table(name = "admins")
-public class AdminEntity {
+public class AdminEntity implements UserDetails {
 
     @Id
     private UUID id;
@@ -31,6 +33,11 @@ public class AdminEntity {
 
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
     private Instant createdAt = Instant.now();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_profiles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "profile_id"))
+    private Set<ProfileEntity> profiles = new HashSet<>();
+
     @PrePersist
     public void prePersist() {
         if (this.createdAt == null) {
@@ -45,6 +52,19 @@ public class AdminEntity {
     private Instant deletedAt;
 
     public AdminEntity() {
+    }
+
+    public AdminEntity(UUID id, String fullName, String email, String password, Profile typeUser, boolean isDeleted, Instant createdAt, Set<ProfileEntity> profiles, Instant updatedAt, Instant deletedAt) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.typeUser = typeUser;
+        this.isDeleted = isDeleted;
+        this.createdAt = createdAt;
+        this.profiles = profiles;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
     }
 
     public AdminEntity(UUID id, String fullName, String email, String password, Profile typeUser, boolean isDeleted, Instant createdAt, Instant updatedAt, Instant deletedAt) {
@@ -72,8 +92,38 @@ public class AdminEntity {
         return email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     public Profile getTypeUser() {

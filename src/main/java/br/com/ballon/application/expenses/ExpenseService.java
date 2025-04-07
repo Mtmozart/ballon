@@ -118,7 +118,6 @@ public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense
 
     @Override
     public StaticsResults getStaticsByYear(UUID consumerId, Year year) {
-
         return new StaticsResults(this.entityRepository.getExpensesByYear(year, consumerId)
                 .orElseThrow(() -> new BallonException("Erro ao buscar as estatísticas"))
                 .stream()

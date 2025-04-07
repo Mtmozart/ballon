@@ -3,15 +3,15 @@ package br.com.ballon.infra.user;
 import br.com.ballon.domain.user.Profile;
 import br.com.ballon.infra.expense.ExpenseEntity;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity(name = "Consumer")
 @Table(name = "consumers")
-public class ConsumerEntity {
+public class ConsumerEntity implements UserDetails {
 
     @Id
     private UUID id;
@@ -32,13 +32,16 @@ public class ConsumerEntity {
     @Column(nullable = false, updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT now()")
     private Instant createdAt;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "users_profiles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "profile_id"))
+    private Set<ProfileEntity> profiles = new HashSet<>();
+
     @PrePersist
     public void prePersist() {
         if (this.createdAt == null) {
             this.createdAt = Instant.now();
         }
     }
-
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "update_at")
     private Instant updatedAt;
 
@@ -71,8 +74,38 @@ public class ConsumerEntity {
         return email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public Profile getTypeUser() {
@@ -91,16 +124,11 @@ public class ConsumerEntity {
         return expenses;
     }
 
-    @Override
-    public String toString() {
-        return "ConsumerEntity{" +
-                "id=" + id +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", typeUser=" + typeUser +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void addProfile(ProfileEntity profile) {
+        this.profiles.add(profile);
     }
 }

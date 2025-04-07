@@ -3,6 +3,7 @@ package br.com.ballon.infra.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -20,5 +21,7 @@ public interface AdminEntityRepository extends JpaRepository<AdminEntity, UUID> 
     @Modifying
     @Query("UPDATE Admin a SET a.isDeleted = :isDeleted, a.deletedAt = :deletedAt WHERE a.id = :id")
     Optional<Integer> deleteAdmin(UUID id, boolean isDeleted, Instant deletedAt);
+
+    UserDetails findByEmail(String email);
 
 }

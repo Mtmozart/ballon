@@ -58,6 +58,7 @@ public class ExpensesController {
     public ResponseEntity<List<DataExpense>> createRecurringExpenses(@Valid @RequestBody GetDataRecurringExpenses data) {
         return ResponseEntity.ok().body(this.service.createRecurringExpenses(ExpenseMapper.toDomainByRegisterRecurringDto(data), data.consumerId(), data.categoriaId(), data.recurring()));
     }
+
     @GetMapping("/users/{userId}/category/{categoryId}")
     public ResponseEntity<StaticsResults> staticsByCategory(@PathVariable UUID userId, @PathVariable Long categoryId) {
         return ResponseEntity.ok().body(this.service.getStaticsByCategory(userId, categoryId));
