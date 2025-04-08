@@ -1,5 +1,6 @@
 package br.com.ballon.infra.security;
 
+import br.com.ballon.infra.user.AdminEntityRepository;
 import br.com.ballon.infra.user.ConsumerEntityRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,23 +21,37 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private ConsumerEntityRepository repository;
+    private ConsumerEntityRepository consumerEntityRepository;
+
+    @Autowired
+    private AdminEntityRepository adminEntityRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("Entrei no filtro");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         var tokenJWT = recoverToken(request);
+        try {
+            if (tokenJWT != null) {
+                var subject = tokenService.getSubject(tokenJWT);
+                var user = consumerEntityRepository.findByEmail(subject);
+                if(user.isEmpty()) {
+                    user = adminEntityRepository.findByEmail(subject);
+                }
 
-        if (tokenJWT != null) {
-            var subject = tokenService.getSubject(tokenJWT);
-            var usuario = repository.findByEmail(subject);
-
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (user.isPresent()) {
+                    var authentication = new UsernamePasswordAuthenticationToken(user.get(), null, user.get().getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
+            filterChain.doFilter(request, response);
+        } catch (RuntimeException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{ \"error\": \"" + e.getMessage() + "\" }");
         }
-
-        filterChain.doFilter(request, response);
     }
+
     private String recoverToken(HttpServletRequest request) {
         var authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null) {

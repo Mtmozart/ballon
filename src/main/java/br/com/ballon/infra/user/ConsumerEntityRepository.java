@@ -17,7 +17,7 @@ public interface ConsumerEntityRepository extends JpaRepository<ConsumerEntity, 
     @Query("UPDATE Consumer c SET c.fullName = :fullName, c.email = :email, c.updatedAt = :updatedAt WHERE c.id = :id")
     Optional<Integer> updatesEntity(String fullName, String email, UUID id, Instant updatedAt);
 
-    UserDetails findByEmail(String email);
+    Optional<UserDetails> findByEmail(String email);
 
 
 }

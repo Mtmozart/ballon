@@ -1,8 +1,6 @@
 package br.com.ballon.infra.security;
 
 import br.com.ballon.domain.exception.BallonException;
-import br.com.ballon.domain.user.Admin;
-import br.com.ballon.domain.user.Consumer;
 import br.com.ballon.infra.user.AdminEntity;
 import br.com.ballon.infra.user.ConsumerEntity;
 import com.auth0.jwt.JWT;
@@ -46,7 +44,7 @@ public class TokenService {
             throw new RuntimeException("Erro ao gerar o token jwt.", exception);
         }
 
-        return null; // Se não for Consumer nem Admin
+        return null;
     }
 
 
@@ -58,7 +56,7 @@ public class TokenService {
         try {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
-                    .withIssuer("API Voll.med")
+                    .withIssuer("Ballon")
                     .build()
                     .verify(tokenJWT)
                     .getSubject();

@@ -22,6 +22,6 @@ public interface AdminEntityRepository extends JpaRepository<AdminEntity, UUID> 
     @Query("UPDATE Admin a SET a.isDeleted = :isDeleted, a.deletedAt = :deletedAt WHERE a.id = :id")
     Optional<Integer> deleteAdmin(UUID id, boolean isDeleted, Instant deletedAt);
 
-    UserDetails findByEmail(String email);
+    Optional<UserDetails> findByEmail(String email);
 
 }

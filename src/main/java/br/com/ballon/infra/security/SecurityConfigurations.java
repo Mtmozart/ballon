@@ -23,11 +23,13 @@ public class SecurityConfigurations {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return
                 http.csrf(AbstractHttpConfigurer::disable)
                         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .authorizeHttpRequests(req -> {
                             req.requestMatchers(HttpMethod.POST, "/consumers", "/login").permitAll();
+                            req.requestMatchers("/consumers/**", "/expenses").hasRole("CONSUMER");
                             req.requestMatchers(
                                     "/v3/api-docs/**",
                                     "/swagger-ui.html",
@@ -35,7 +37,7 @@ public class SecurityConfigurations {
                             ).permitAll();
                             req.anyRequest().authenticated();
                         })
-                        .addFilterBefore( securityFilter, UsernamePasswordAuthenticationFilter.class)
+                        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                         .build();
     }
 

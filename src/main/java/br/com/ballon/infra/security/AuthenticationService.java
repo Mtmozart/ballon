@@ -20,12 +20,12 @@ public class AuthenticationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var consumer = this.consumerEntityRepository.findByEmail(username);
+        var consumer = this.consumerEntityRepository.findByEmail(username).get();
         if (consumer != null) {
             return consumer;
         }
 
-       var admin = this.adminEntityRepository.findByEmail(username);
+       var admin = this.adminEntityRepository.findByEmail(username).get();
         if (admin != null) {
             return admin;
         }
