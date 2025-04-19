@@ -29,6 +29,7 @@ public class TokenService {
                 return JWT.create()
                         .withIssuer("Ballon")
                         .withSubject(consumer.getEmail())
+                        .withClaim("id", consumer.getId().toString())
                         .withExpiresAt(expirationData(72))
                         .sign(algoritmo);
 
@@ -36,6 +37,7 @@ public class TokenService {
                 return JWT.create()
                         .withIssuer("Ballon")
                         .withSubject(admin.getEmail())
+                        .withClaim("id", admin.getId().toString())
                         .withExpiresAt(expirationData(24))
                         .sign(algoritmo);
             }

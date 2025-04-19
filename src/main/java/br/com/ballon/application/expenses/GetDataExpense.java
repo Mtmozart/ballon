@@ -1,34 +1,31 @@
 package br.com.ballon.application.expenses;
 
-import br.com.ballon.domain.expenses.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.Month;
-import java.time.Year;
 import java.util.UUID;
 
 public record GetDataExpense(
-
-        @NotNull(message = "O mês não pode ser nulo")
+        @NotNull(message = "{expense.month.notnull}")
         Month month,
 
-        @NotNull(message = "O ano não pode ser nulo")
+        @NotNull(message = "{expense.year.notnull}")
         int year,
 
-        @NotBlank(message = "O título não pode estar em branco")
+        @NotBlank(message = "{expense.title.notblank}")
         String title,
 
-        @NotNull(message = "O valor não pode ser nulo")
-        @Positive(message = "O valor deve ser positivo")
+        @NotNull(message = "{expense.value.notnull}")
+        @Positive(message = "{expense.value.positive}")
         BigDecimal value,
 
-        @NotNull(message = "O consumidor não pode ser nulo")
+        @NotNull(message = "{expense.consumer.notnull}")
         UUID consumerId,
 
-        @NotNull(message = "A categoria não pode ser nula")
+        @NotNull(message = "{expense.category.notnull}")
         Long categoriaId
 ) {
 }

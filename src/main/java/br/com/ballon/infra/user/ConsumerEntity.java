@@ -76,7 +76,7 @@ public class ConsumerEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.profiles;
     }
 
     public String getPassword() {
@@ -130,5 +130,20 @@ public class ConsumerEntity implements UserDetails {
 
     public void addProfile(ProfileEntity profile) {
         this.profiles.add(profile);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ConsumerEntity{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", typeUser=" + typeUser +
+                ", createdAt=" + createdAt +
+                ", profiles=" + profiles +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

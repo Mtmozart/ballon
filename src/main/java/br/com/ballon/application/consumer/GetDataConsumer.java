@@ -2,19 +2,23 @@ package br.com.ballon.application.consumer;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record GetDataConsumer(
 
-        @NotBlank(message = "O nome deve ser obrigatório")
-        @Size(min = 3, max = 60, message = "O nome deve ter entre 3 e 60 caracteres")
-        String name,
-        @NotBlank(message = "O e-mail deve ser obrigatório")
-        @Email(message = "E-mail inválido")
-        String email,
-        @NotBlank(message = "A senha é obrigatporia")
-        @Size(min = 5, max = 30, message = "O nome deve ter entre 5 e 30 caracteres")
-        String password
 
+        @NotBlank(message = "{name.required}")
+        @Size(min = 3, max = 60, message = "{name.size}")
+        @Pattern(regexp = "^[\\p{L} ]+$", message = "{nome.invalido}")
+        String name,
+
+        @NotBlank(message = "{email.required}")
+        @Email(message = "{email.invalid}")
+        String email,
+
+        @NotBlank(message = "{password.required}")
+        @Size(min = 8, max = 30, message = "{password.size}")
+        String password
 ) {
 }

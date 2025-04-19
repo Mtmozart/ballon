@@ -31,17 +31,22 @@ public class SecurityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         var tokenJWT = recoverToken(request);
+
+
         try {
             if (tokenJWT != null) {
                 var subject = tokenService.getSubject(tokenJWT);
                 var user = consumerEntityRepository.findByEmail(subject);
+
                 if(user.isEmpty()) {
                     user = adminEntityRepository.findByEmail(subject);
                 }
 
+
                 if (user.isPresent()) {
                     var authentication = new UsernamePasswordAuthenticationToken(user.get(), null, user.get().getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println(user.get().toString());
                 }
             }
             filterChain.doFilter(request, response);

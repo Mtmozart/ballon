@@ -1,6 +1,7 @@
 package br.com.ballon.application.expenses;
 
 import br.com.ballon.utils.ExpenseMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/expenses")
+@SecurityRequirement(name="bearer-key")
 public class ExpensesController {
 
     private final ExpenseService service;
