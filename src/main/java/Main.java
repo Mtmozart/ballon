@@ -23,7 +23,7 @@ public class Main {
                 .withEmail("consumer@example.com")
                 .withPassword("consumer123")
                 .build();
-        Category category = new Category(1, CategoryEnum.DISCRETIONARY);
+        Category category = new Category(1, CategoryEnum.COMFORT);
 
         SubCategory subCategory = new SubCategory.Builder()
                 .categoryId(category.getId())

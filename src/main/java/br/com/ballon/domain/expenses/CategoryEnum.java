@@ -1,10 +1,12 @@
 package br.com.ballon.domain.expenses;
 
 public enum CategoryEnum {
-    ESSENTIALS("essentials"),
-    LEISURES("leisures"),
-    DISCRETIONARY("discretionary"),
-    INVESTMENTS("investments");
+    FIXED_COSTS("fixed_costs"),
+    COMFORT("comfort"),
+    GOALS("goals"),
+    KNOWLEDGE("knowledge"),
+    PLEASURES("pleasures"),
+    FINANCIAL_FREEDOM("financial_freedom");
 
     private String category;
 

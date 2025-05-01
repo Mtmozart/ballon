@@ -34,7 +34,13 @@ CREATE TABLE expenses (
 
 CREATE TABLE categories (
     id BIGINT PRIMARY KEY NOT NULL,
-    title VARCHAR(50) NOT NULL UNIQUE CHECK (title IN ('ESSENTIALS', 'LEISURES', 'DISCRETIONARY', 'INVESTMENTS'))
+    title VARCHAR(50) NOT NULL UNIQUE CHECK (title IN (
+    'FIXED_COSTS',
+     'COMFORT',
+     'GOALS',
+     'KNOWLEDGE',
+     'PLEASURES',
+     'FINANCIAL_FREEDOM')
 );
 
 CREATE TABLE expense_categories (
@@ -57,7 +63,9 @@ CREATE TABLE subcategories (
 
 INSERT INTO categories (id, title)
 VALUES
-    (1, 'ESSENTIALS'),
-    (2, 'LEISURES'),
-    (3, 'DISCRETIONARY'),
-    (4, 'INVESTMENTS');
+    (1, 'FIXED_COSTS'),
+    (2, 'COMFORT'),
+    (3, 'GOALS'),
+    (4, 'KNOWLEDGE'),
+    (5, 'PLEASURES'),
+    (6, 'FINANCIAL_FREEDOM');
