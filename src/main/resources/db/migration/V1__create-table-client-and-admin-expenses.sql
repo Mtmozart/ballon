@@ -35,12 +35,13 @@ CREATE TABLE expenses (
 CREATE TABLE categories (
     id BIGINT PRIMARY KEY NOT NULL,
     title VARCHAR(50) NOT NULL UNIQUE CHECK (title IN (
-    'FIXED_COSTS',
-     'COMFORT',
-     'GOALS',
-     'KNOWLEDGE',
-     'PLEASURES',
-     'FINANCIAL_FREEDOM')
+        'FIXED_COSTS',
+        'COMFORT',
+        'GOALS',
+        'KNOWLEDGE',
+        'PLEASURES',
+        'FINANCIAL_FREEDOM'
+    ))
 );
 
 CREATE TABLE expense_categories (
@@ -59,7 +60,6 @@ CREATE TABLE subcategories (
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
     FOREIGN KEY (consumer_id) REFERENCES consumers(id) ON DELETE CASCADE
 );
-
 
 INSERT INTO categories (id, title)
 VALUES
