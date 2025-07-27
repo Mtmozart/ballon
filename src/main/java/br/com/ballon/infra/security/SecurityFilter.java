@@ -38,7 +38,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 var subject = tokenService.getSubject(tokenJWT);
                 var user = consumerEntityRepository.findByEmail(subject);
 
-                if(user.isEmpty()) {
+                if (user.isEmpty()) {
                     user = adminEntityRepository.findByEmail(subject);
                 }
 

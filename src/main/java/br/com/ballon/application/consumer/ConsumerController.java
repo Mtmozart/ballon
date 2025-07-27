@@ -1,7 +1,11 @@
 package br.com.ballon.application.consumer;
 
+import br.com.ballon.infra.security.TokenService;
 import br.com.ballon.utils.ConsumerMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +16,12 @@ import java.util.UUID;
 @RequestMapping("/consumers")
 public class ConsumerController {
     private final ConsumerService consumerService;
+    private final TokenService tokenService;
+    private static final Logger logger = LoggerFactory.getLogger(ConsumerController.class);
 
-    public ConsumerController(ConsumerService consumerService) {
+    public ConsumerController(ConsumerService consumerService, TokenService tokenService) {
         this.consumerService = consumerService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping
@@ -40,8 +47,12 @@ public class ConsumerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DataConsumer> profile(@PathVariable UUID id) {
+    @GetMapping("/me")
+    @Transactional
+    public ResponseEntity<DataConsumer> profile(HttpServletRequest request) {
+        String token = tokenService.recoverToken(request);
+        String idStr = this.tokenService.getId(token);
+        UUID id = UUID.fromString(idStr);
         return ResponseEntity.ok(consumerService.findById(id));
     }
 }

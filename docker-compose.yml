@@ -25,5 +25,15 @@ services:
     ports:
       - "8080:8080"
 
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    restart: unless-stopped
+    depends_on:
+      - app
+
 volumes:
   postgres-data:

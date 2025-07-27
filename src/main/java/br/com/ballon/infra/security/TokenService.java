@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 
 @Service
 public class TokenService {
@@ -62,6 +63,19 @@ public class TokenService {
                     .build()
                     .verify(tokenJWT)
                     .getSubject();
+        } catch (JWTVerificationException exception) {
+            throw new BallonException("Token JWT inválido ou expirado!");
+        }
+    }
+
+    public String getId(String tokenJWT) {
+        try {
+            var algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("Ballon")
+                    .build()
+                    .verify(tokenJWT)
+                    .getClaim("id").asString();
         } catch (JWTVerificationException exception) {
             throw new BallonException("Token JWT inválido ou expirado!");
         }
