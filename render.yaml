@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: ballon-backend
+    env: docker
+    repo: https://github.com/seu-usuario/seu-repo
+    branch: main
+    plan: free
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: POSTGRES_HOST
+        value: dpg-d24knfbe5dus73dd0ob0-a.oregon-postgres.render.com
+      - key: POSTGRES_PORT
+        value: 5432
+      - key: POSTGRES_DB
+        value: dvballon
+      - key: POSTGRES_USER
+        value: mtmozart
+      - key: POSTGRES_PASSWORD
+        value: 3kxAC5fOJv6ZvpXKO9hKhzaMlAFkM0KR
+      - key: JWT_SECRET
+        value: sua-chave-super-secreta
