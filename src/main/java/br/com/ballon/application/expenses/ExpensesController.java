@@ -75,4 +75,9 @@ public class ExpensesController {
     public ResponseEntity<StaticsResults> staticsByYear(@PathVariable UUID userId, @PathVariable Year year) {
         return ResponseEntity.ok().body(this.service.getStaticsByYear(userId, year));
     }
+
+    @GetMapping("/users/{consumerId}/month/{month}/year/{year}")
+    public ResponseEntity<List<StaticsAllCategoryResults>> staticsByYear(@PathVariable UUID consumerId, @PathVariable Month month, @PathVariable Year year) {
+        return ResponseEntity.ok().body(this.service.getStaticsByMonthAndCategoryAndYear(consumerId, month, year));
+    }
 }

@@ -11,6 +11,24 @@ services:
     ports:
       - "8080:8080"
 
+  postgres:
+    image: postgres:latest
+    container_name: ballon-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ballon
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senhadb
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ballon"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   nginx:
     image: nginx:stable-alpine
     ports:
@@ -20,3 +38,6 @@ services:
     restart: unless-stopped
     depends_on:
       - app
+
+volumes:
+  postgres_data:

@@ -2,7 +2,7 @@ package br.com.ballon.application.expenses;
 
 import java.util.List;
 
-public interface IExpense<T, ID, S, R, B, M, Y, D> {
+public interface IExpense<T, ID, S, R, B, M, Y, D, E> {
 
     R create(T t, ID UserId, S categoryId);
 
@@ -21,6 +21,8 @@ public interface IExpense<T, ID, S, R, B, M, Y, D> {
     D getStaticsByCategory(ID UserId, S categoryId);
 
     D getStaticsByYear(ID UserId, Y year);
+
+    List<E> getStaticsByMonthAndCategoryAndYear(ID UserId, M month, Y year);
 
 
 }

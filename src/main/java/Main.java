@@ -60,8 +60,6 @@ public class Main {
         consumer.addExpense(expense);
         consumer.addExpense(expense2);
         consumer.addExpense(expense3);
-
-        System.out.println(consumer.toString());
     }
 
 

@@ -14,11 +14,12 @@ import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults> {
+public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults, StaticsAllCategoryResults> {
 
     public final ExpenseEntityRepository entityRepository;
     private final ConsumerEntityRepository consumerEntityRepository;
@@ -125,4 +126,21 @@ public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
     }
+
+    @Override
+    public List<StaticsAllCategoryResults> getStaticsByMonthAndCategoryAndYear(UUID consumerId, Month month, Year year) {
+        List<ExpenseEntity> expenses = this.entityRepository
+                .getExpensesByMonthAndCategoryAndYear(month, consumerId, year)
+                .orElseThrow(() -> new BallonException("Erro ao buscar as estatísticas"));
+
+        Map<CategoryEntity, BigDecimal> totalPorCategoria = expenses.stream()
+                .collect(Collectors.groupingBy(
+                        ExpenseEntity::getCategories,
+                        Collectors.reducing(BigDecimal.ZERO, ExpenseEntity::getValue, BigDecimal::add)
+                ));
+        return totalPorCategoria.entrySet().stream()
+                .map(entry -> new StaticsAllCategoryResults(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+
 }

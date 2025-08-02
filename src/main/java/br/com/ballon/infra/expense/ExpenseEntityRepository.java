@@ -1,5 +1,6 @@
 package br.com.ballon.infra.expense;
 
+import br.com.ballon.domain.expenses.Months;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,10 +25,13 @@ public interface ExpenseEntityRepository extends JpaRepository<ExpenseEntity, UU
     @Query("SELECT e FROM Expense e WHERE e.category.id = :categoryId AND e.consumer.id = :consumerId")
     Optional<List<ExpenseEntity>> getExpensesByCategoryId(Long categoryId, UUID consumerId);
 
-    @Query("SELECT e FROM Expense e WHERE e.month = :month AND e.consumer.id = :consumerId")
+    @Query("SELECT e FROM Expense e WHERE e.month = :month AND e.consumer.id = :consumerId AND e.year = 2025 ")
     Optional<List<ExpenseEntity>> getExpensesByMonth(Month month, UUID consumerId);
 
     @Query("SELECT e FROM Expense e WHERE e.year = :year AND e.consumer.id = :consumerId")
     Optional<List<ExpenseEntity>> getExpensesByYear(Year year, UUID consumerId);
+
+    @Query("SELECT e FROM Expense e WHERE e.month = :month AND e.consumer.id = :consumerId AND e.year = :year ")
+    Optional<List<ExpenseEntity>> getExpensesByMonthAndCategoryAndYear(Month month, UUID consumerId, Year year);
 
 }
