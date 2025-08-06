@@ -6,6 +6,8 @@ import br.com.ballon.infra.expense.*;
 import br.com.ballon.infra.user.ConsumerEntity;
 import br.com.ballon.infra.user.ConsumerEntityRepository;
 import br.com.ballon.utils.ExpenseMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults, StaticsAllCategoryResults> {
+public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults, StaticsAllCategoryResults, Pageable> {
 
     public final ExpenseEntityRepository entityRepository;
     private final ConsumerEntityRepository consumerEntityRepository;
@@ -71,11 +73,16 @@ public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense
     }
 
     @Override
-    public List<DataExpense> findAllByUser(UUID userId) {
-        return this.entityRepository.getAllByUser(userId).orElseThrow(() -> new BallonException("Gastos não encontrado."))
-                .stream().map(
-                        ExpenseMapper::toDataResponse
-                ).collect(Collectors.toUnmodifiableList());
+    public List<DataExpense> findAllByUser(UUID userId, Pageable pageable) {
+        Page<ExpenseEntity> page = this.entityRepository.findByUserId(userId, pageable);
+
+        if (page.isEmpty()) {
+            throw new BallonException("Gastos não encontrados.");
+        }
+        return page.getContent()
+                .stream()
+                .map(ExpenseMapper::toDataResponse)
+                .toList();
     }
 
     @Override

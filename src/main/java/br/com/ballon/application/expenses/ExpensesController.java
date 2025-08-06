@@ -3,6 +3,8 @@ package br.com.ballon.application.expenses;
 import br.com.ballon.utils.ExpenseMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -51,8 +53,14 @@ public class ExpensesController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<List<DataExpense>> findAll(@PathVariable UUID id) {
-        return ResponseEntity.ok().body(this.service.findAllByUser(id));
+    public ResponseEntity<List<DataExpense>> findAll(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<DataExpense> expenses = this.service.findAllByUser(id, pageable);
+        return ResponseEntity.ok().body(expenses);
     }
 
     @PostMapping("/recurring")

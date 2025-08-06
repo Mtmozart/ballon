@@ -1,6 +1,7 @@
 package br.com.ballon.infra.expense;
 
-import br.com.ballon.domain.expenses.Months;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,5 +34,8 @@ public interface ExpenseEntityRepository extends JpaRepository<ExpenseEntity, UU
 
     @Query("SELECT e FROM Expense e WHERE e.month = :month AND e.consumer.id = :consumerId AND e.year = :year ")
     Optional<List<ExpenseEntity>> getExpensesByMonthAndCategoryAndYear(Month month, UUID consumerId, Year year);
+
+    @Query("SELECT e FROM Expense e WHERE e.consumer.id = :userId")
+    Page<ExpenseEntity> findByUserId(UUID userId, Pageable pageable);
 
 }

@@ -2,7 +2,7 @@ package br.com.ballon.application.expenses;
 
 import java.util.List;
 
-public interface IExpense<T, ID, S, R, B, M, Y, D, E> {
+public interface IExpense<T, ID, S, R, B, M, Y, D, E, P> {
 
     R create(T t, ID UserId, S categoryId);
 
@@ -12,7 +12,7 @@ public interface IExpense<T, ID, S, R, B, M, Y, D, E> {
 
     R findById(ID id);
 
-    List<R> findAllByUser(ID UserId);
+    List<R> findAllByUser(ID UserId, P pageable);
 
     List<R> createRecurringExpenses(T t, ID UserId, S categoryId, S repeat);
 
