@@ -1,16 +1,15 @@
 package br.com.ballon.utils;
 
-import br.com.ballon.application.expenses.DataExpense;
-import br.com.ballon.application.expenses.GetDataExpense;
-import br.com.ballon.application.expenses.GetDataExpenseUpdate;
-import br.com.ballon.application.expenses.GetDataRecurringExpenses;
+import br.com.ballon.application.expenses.*;
 import br.com.ballon.domain.expenses.Expense;
 import br.com.ballon.infra.expense.CategoryEntity;
 import br.com.ballon.infra.expense.ExpenseEntity;
 import br.com.ballon.infra.user.ConsumerEntity;
+import org.springframework.data.domain.Page;
 
 import java.time.Instant;
 import java.time.Year;
+import java.util.List;
 
 public class ExpenseMapper {
 
@@ -65,4 +64,21 @@ public class ExpenseMapper {
                 expenseEntity.getCategories().getTitle().toString()
         );
     }
+
+    public static PageExpenseResponse toPageExpenseResponse(Page<ExpenseEntity> page) {
+        List<DataExpense> dataExpenses = page.getContent()
+                .stream()
+                .map(ExpenseMapper::toDataResponse)
+                .toList();
+
+        return new PageExpenseResponse(
+                dataExpenses,
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
+    }
+
 }

@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults, StaticsAllCategoryResults, Pageable> {
+public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense, Boolean, Month, Year, StaticsResults, StaticsAllCategoryResults, Pageable, PageExpenseResponse> {
 
     public final ExpenseEntityRepository entityRepository;
     private final ConsumerEntityRepository consumerEntityRepository;
@@ -60,7 +60,6 @@ public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense
 
     }
 
-
     @Override
     public void delete(UUID id) {
         this.entityRepository.findById(id).orElseThrow(() -> new BallonException("Gasto não encontrado."));
@@ -68,21 +67,16 @@ public class ExpenseService implements IExpense<Expense, UUID, Long, DataExpense
     }
 
     @Override
-    public DataExpense findById(UUID id) {
-        return ExpenseMapper.toDataResponse(this.entityRepository.findById(id).orElseThrow(() -> new BallonException("Gasto não encontrado.")));
+    public DataExpense findById(UUID uuid) {
+        return this.entityRepository.findById(uuid)
+                .map(ExpenseMapper::toDataResponse)
+                .orElseThrow(() -> new BallonException("Gasto não encontrado."));
     }
 
     @Override
-    public List<DataExpense> findAllByUser(UUID userId, Pageable pageable) {
+    public PageExpenseResponse findAllByUser(UUID userId, Pageable pageable) {
         Page<ExpenseEntity> page = this.entityRepository.findByUserId(userId, pageable);
-
-        if (page.isEmpty()) {
-            throw new BallonException("Gastos não encontrados.");
-        }
-        return page.getContent()
-                .stream()
-                .map(ExpenseMapper::toDataResponse)
-                .toList();
+        return ExpenseMapper.toPageExpenseResponse(page);
     }
 
     @Override

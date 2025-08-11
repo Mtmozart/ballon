@@ -53,13 +53,13 @@ public class ExpensesController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<List<DataExpense>> findAll(
+    public ResponseEntity<PageExpenseResponse> findAll(
             @PathVariable UUID id,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<DataExpense> expenses = this.service.findAllByUser(id, pageable);
+        PageExpenseResponse expenses = this.service.findAllByUser(id, pageable);
         return ResponseEntity.ok().body(expenses);
     }
 
